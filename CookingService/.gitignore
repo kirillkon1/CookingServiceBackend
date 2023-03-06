@@ -10,6 +10,8 @@ gradlew
 gradle
 src/test
 src/sql-scripts
+gradlew.bat
+
 
 ### STS ###
 .apt_generated
