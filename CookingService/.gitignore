@@ -11,7 +11,7 @@ gradle
 src/test
 src/sql-scripts
 gradlew.bat
-/src/main/kotlin/ru/itmo/cookingservice/test/
+/src/main/kotlin/ru/itmo/cookingservice/test
 
 ### STS ###
 .apt_generated
