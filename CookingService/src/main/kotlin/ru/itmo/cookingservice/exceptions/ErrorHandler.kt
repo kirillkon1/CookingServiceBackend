@@ -5,7 +5,6 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
-import ru.itmo.cookingservice.dto.ApiError
 import ru.itmo.cookingservice.exceptions.userException.UserAlreadyExistsException
 import ru.itmo.cookingservice.exceptions.userException.UserDoesNotExistException
 
@@ -13,10 +12,16 @@ import ru.itmo.cookingservice.exceptions.userException.UserDoesNotExistException
 class ErrorHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException::class)
-    fun handle(exception: MethodArgumentNotValidException): ResponseEntity<ApiError> {
-        val error = exception.fieldErrors[0].defaultMessage
-        val apiError = ApiError(error)
-        return ResponseEntity<ApiError>(apiError, null, HttpStatus.BAD_REQUEST)
+    fun handle(exception: MethodArgumentNotValidException): ResponseEntity<List<String?>> {
+        val errors = exception.fieldErrors.map {
+            it.defaultMessage
+        }.toList()
+
+        return ResponseEntity<List<String?>>(
+            errors,
+            null,
+            HttpStatus.BAD_REQUEST,
+        )
     }
 
     @ExceptionHandler

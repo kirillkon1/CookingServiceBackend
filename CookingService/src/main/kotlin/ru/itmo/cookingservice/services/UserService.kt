@@ -1,6 +1,5 @@
 package ru.itmo.cookingservice.services
 
-
 import mu.KotlinLogging
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -11,22 +10,19 @@ import ru.itmo.cookingservice.repositories.UserRepository
 import ru.itmo.cookingservice.repositories.UserRoleRepository
 import java.util.Optional
 
-
 @Service
 class UserService(private val userRepository: UserRepository, private val userRoleRepository: UserRoleRepository) {
 
-
-    private val logger = KotlinLogging.logger{}
+    private val logger = KotlinLogging.logger {}
 
     fun getAll(): Iterable<User> = userRepository.findAll()
 
     @Transactional
-    fun create(name: String, password: String, email: String? = null): User {
-
+    fun create(name: String?, password: String?, email: String? = null): User {
         logger.debug { "Receieved userDTO: name: $name; password: $password; email = $email" }
 
-        val userOpt: Optional<User> = userRepository.findUserByName(name)
-        if (userOpt.isPresent) throw UserAlreadyExistsException("Пользователь с именем $name уже существует!")
+        val userOpt: Optional<User>? = name?.let { userRepository.findUserByName(it) }
+        if (userOpt!!.isPresent) throw UserAlreadyExistsException("Пользователь с именем $name уже существует!")
 
         val userRole = userRoleRepository.findByName("USER")
 
@@ -55,6 +51,4 @@ class UserService(private val userRepository: UserRepository, private val userRo
 
         userRepository.deleteById(id)
     }
-
-
 }

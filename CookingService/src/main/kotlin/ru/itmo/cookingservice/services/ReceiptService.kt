@@ -1,9 +1,10 @@
 package ru.itmo.cookingservice.services
 
+import mu.KotlinLogging
 import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import ru.itmo.cookingservice.dto.ReceiptDto
+import ru.itmo.cookingservice.dto.receipt.ReceiptDto
 import ru.itmo.cookingservice.models.*
 import ru.itmo.cookingservice.repositories.ReceiptRepository
 import java.util.Optional
@@ -13,7 +14,9 @@ class ReceiptService(
     private val receiptRepository: ReceiptRepository,
 ) {
 
-    fun getReceiptByPageAndSize(size: Int = 10, page: Int = 1): List<Receipt> {
+    private val logger = KotlinLogging.logger {}
+
+    fun getReceiptByPageAndSize(size: Int = 10, page: Int = 10): List<Receipt> {
         print("$size, $page")
         val pageable = PageRequest.of(size, page)
         return receiptRepository.findAll(pageable).content
@@ -24,9 +27,17 @@ class ReceiptService(
     }
 
     @Transactional
-    fun create(receiptDto: ReceiptDto): Receipt {
-        val receipt = Receipt(receiptDto)
-        val categories = receiptDto.categories
+    fun create(dto: ReceiptDto): Receipt {
+        val receipt = Receipt()
+
+        receipt.name = dto.name
+        receipt.description = dto.description
+        receipt.amountOfPortions = dto.amountOfPortions
+        receipt.calories = dto.calories
+        receipt.rating = 0
+        receipt.createdDate = dto.createdDate
+
+        val categories = dto.categories
 
         if (categories != null && categories.size > 0) {
             receipt.categories = mutableListOf()
@@ -37,7 +48,7 @@ class ReceiptService(
             }
         }
 
-        receiptDto.composition?.forEach {
+        dto.compositions?.forEach {
             receipt.compositions?.add(
                 Composition(
                     amount = it.amount,
@@ -46,6 +57,8 @@ class ReceiptService(
                 ),
             )
         }
+
+        logger.debug { "Receipt ${dto.name}" }
 
         return receiptRepository.save(receipt)
     }

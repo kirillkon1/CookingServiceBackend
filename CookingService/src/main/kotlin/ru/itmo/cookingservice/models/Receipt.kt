@@ -2,7 +2,6 @@ package ru.itmo.cookingservice.models
 
 import jakarta.persistence.*
 import org.springframework.data.annotation.CreatedDate
-import ru.itmo.cookingservice.dto.ReceiptDto
 import java.time.LocalDateTime
 
 @Entity
@@ -46,13 +45,4 @@ class Receipt(
     @OneToMany(mappedBy = "receipt", cascade = [CascadeType.ALL])
     var compositions: MutableList<Composition>? = null,
 
-) {
-    constructor(dto: ReceiptDto) : this() {
-        this.name = dto.name
-        this.description = dto.description
-        this.amountOfPortions = dto.amountOfPortions
-        this.calories = dto.calories
-        this.rating = 0
-        this.createdDate = dto.createdAt
-    }
-}
+)

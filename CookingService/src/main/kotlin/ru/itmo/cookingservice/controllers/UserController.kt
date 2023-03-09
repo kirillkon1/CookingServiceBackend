@@ -10,18 +10,16 @@ import ru.itmo.cookingservice.models.User
 import ru.itmo.cookingservice.services.UserService
 
 @RestController
-@RequestMapping("users")
+@RequestMapping("api/users")
 class UserController(val userService: UserService) {
 
     @GetMapping()
-    fun getAll(): Iterable<User>{
+    fun getAll(): Iterable<User> {
         return userService.getAll()
     }
 
     @PostMapping()
-    fun create(@RequestBody userDto: UserDto): User{
+    fun create(@RequestBody userDto: UserDto): User {
         return userService.create(userDto.name, userDto.password, userDto.email)
     }
-
-
 }

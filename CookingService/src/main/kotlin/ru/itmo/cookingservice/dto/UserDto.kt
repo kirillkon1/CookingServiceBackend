@@ -1,14 +1,19 @@
 package ru.itmo.cookingservice.dto
 
+import jakarta.validation.constraints.Email
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.NotNull
 import java.io.Serializable
 
-data class UserDto(
+class UserDto : Serializable {
+    @NotNull
+    @NotBlank
+    val name: String? = null
 
     @NotNull
     @NotBlank
-    val name: String,
-    val password: String,
+    val password: String? = null
+
+    @Email
     val email: String? = null
-) : Serializable
+}
