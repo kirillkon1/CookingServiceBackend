@@ -1,6 +1,5 @@
 package ru.itmo.cookingservice.models
 
-import com.fasterxml.jackson.annotation.JsonIgnore
 import jakarta.persistence.*
 
 @Table(name = "compositions")
@@ -22,9 +21,4 @@ class Composition(
     @JoinColumn(name = "metrics_id", nullable = false)
     val metric: Metric? = null,
 
-) {
-
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "receipt_id", referencedColumnName = "id")
-    val receipt: Receipt? = null
-}
+)

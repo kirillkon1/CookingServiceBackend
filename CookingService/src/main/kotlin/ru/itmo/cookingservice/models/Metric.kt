@@ -12,6 +12,6 @@ class Metric(
     @JsonIgnore
     val id: Long? = 0,
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     val name: String? = null,
 )

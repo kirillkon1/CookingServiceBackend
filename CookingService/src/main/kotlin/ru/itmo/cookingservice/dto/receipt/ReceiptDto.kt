@@ -23,7 +23,7 @@ class ReceiptDto {
     @Valid
     val categories: MutableList<ReceiptCategoryDto>? = null
 
-    @NotEmpty(message = "Список composition не может быть пустым!")
+    @NotEmpty(message = "Список compositions не может быть пустым!")
     @Valid
     val compositions: MutableList<CompositionDto>? = null
 

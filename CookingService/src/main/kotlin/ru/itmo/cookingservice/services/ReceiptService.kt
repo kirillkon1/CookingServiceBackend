@@ -5,13 +5,20 @@ import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import ru.itmo.cookingservice.dto.receipt.ReceiptDto
+import ru.itmo.cookingservice.exceptions.receiptExceptions.NotFoundException
 import ru.itmo.cookingservice.models.*
+import ru.itmo.cookingservice.repositories.IngredientRepository
+import ru.itmo.cookingservice.repositories.MetricRepository
+import ru.itmo.cookingservice.repositories.ReceiptCategoryRepository
 import ru.itmo.cookingservice.repositories.ReceiptRepository
 import java.util.Optional
 
 @Service
 class ReceiptService(
     private val receiptRepository: ReceiptRepository,
+    private val categoryRepository: ReceiptCategoryRepository,
+    private val ingredientRepository: IngredientRepository,
+    private val metricRepository: MetricRepository,
 ) {
 
     private val logger = KotlinLogging.logger {}
@@ -26,12 +33,16 @@ class ReceiptService(
         return receiptRepository.findAll()
     }
 
+    fun getByStartsWith(str: String): List<Receipt> {
+        return receiptRepository.getStartsWith(str)
+    }
+
     @Transactional
     fun create(dto: ReceiptDto): Receipt {
         val receipt = Receipt()
 
-        receipt.name = dto.name
-        receipt.description = dto.description
+        receipt.name = dto.name!!.trim()
+        receipt.description = dto.description?.trim()
         receipt.amountOfPortions = dto.amountOfPortions
         receipt.calories = dto.calories
         receipt.rating = 0
@@ -42,18 +53,35 @@ class ReceiptService(
         if (categories != null && categories.size > 0) {
             receipt.categories = mutableListOf()
             categories.forEach {
-                receipt.categories?.add(
-                    ReceiptCategory(name = it.name),
-                )
+                val categoryOpt = categoryRepository.findByName(it.name!!.lowercase())
+
+                if (categoryOpt.isEmpty) {
+                    throw NotFoundException(message = "Категория '${it.name}' не была найдена")
+                }
+
+                receipt.categories?.add(categoryOpt.get())
             }
         }
 
+        receipt.compositions = mutableListOf()
         dto.compositions?.forEach {
-            receipt.compositions?.add(
+            val ingredientOpt = ingredientRepository.findByName(it.ingredient!!.name!!.lowercase().trim())
+
+            if (ingredientOpt.isEmpty) {
+                throw NotFoundException(message = "Ингредиент '${it.ingredient.name}' не был найден!")
+            }
+
+            val metricOpt = metricRepository.findByName(it.metric!!.name!!.lowercase().trim())
+
+            if (metricOpt.isEmpty) {
+                throw NotFoundException(message = "Метрика '${it.metric.name}' не была найдена!")
+            }
+
+            receipt.compositions!!.add(
                 Composition(
                     amount = it.amount,
-                    ingredient = Ingredient(name = it.ingredient?.name),
-                    metric = Metric(name = it.metric?.name),
+                    ingredient = ingredientOpt.get(),
+                    metric = metricOpt.get(),
                 ),
             )
         }

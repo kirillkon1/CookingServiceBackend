@@ -19,6 +19,11 @@ class ReceiptController(private val receiptService: ReceiptService) {
         return receiptService.getReceiptByPageAndSize(size = size ?: 10, page = page ?: 10)
     }
 
+    @GetMapping("/starts")
+    fun getByStartsWith(@RequestParam(required = false, name = "start") start: String) {
+        receiptService.getByStartsWith(start)
+    }
+
     @GetMapping("page/{page}")
     fun getByPage(@RequestParam page: Int): List<Receipt> {
         return receiptService.getReceiptByPageAndSize(page = page)

@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
+import ru.itmo.cookingservice.exceptions.receiptExceptions.NotFoundException
 import ru.itmo.cookingservice.exceptions.userException.UserAlreadyExistsException
 import ru.itmo.cookingservice.exceptions.userException.UserDoesNotExistException
 
@@ -34,6 +35,14 @@ class ErrorHandler {
 
     @ExceptionHandler
     fun userIsDoesNotExistExceptionHandler(ex: UserDoesNotExistException): ResponseEntity<ApiError> {
+        return ResponseEntity(
+            ApiError(ex.message),
+            HttpStatus.NOT_FOUND,
+        )
+    }
+
+    @ExceptionHandler(NotFoundException::class)
+    fun notFoundExceptionHandler(ex: NotFoundException): ResponseEntity<ApiError> {
         return ResponseEntity(
             ApiError(ex.message),
             HttpStatus.NOT_FOUND,

@@ -1,6 +1,5 @@
 package ru.itmo.cookingservice.models
 
-import com.fasterxml.jackson.annotation.JsonIgnore
 import jakarta.persistence.*
 
 @Entity
@@ -9,10 +8,9 @@ class Ingredient(
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonIgnore
     val id: Long? = 0,
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     val name: String? = null,
 
 )

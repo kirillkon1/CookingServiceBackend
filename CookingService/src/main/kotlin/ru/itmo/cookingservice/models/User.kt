@@ -15,7 +15,7 @@ class User(
     @JsonIgnore
     val id: Long = 0,
 
-    @Column(name = "name", nullable = false)
+    @Column(name = "name", nullable = false, unique = true)
     var name: String? = null,
 
     @Column(name = "password", nullable = false)

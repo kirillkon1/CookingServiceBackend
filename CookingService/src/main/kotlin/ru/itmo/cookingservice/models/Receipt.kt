@@ -42,7 +42,8 @@ class Receipt(
 //    @JoinTable(joinColumns = [JoinColumn(name = "receipt_id", referencedColumnName = "id")])
 //    var composition: MutableList<Composition> = mutableListOf(),
 
-    @OneToMany(mappedBy = "receipt", cascade = [CascadeType.ALL])
+    @OneToMany(cascade = [CascadeType.ALL], orphanRemoval = true)
+    @JoinColumn(name = "receipt_id")
     var compositions: MutableList<Composition>? = null,
 
 )
