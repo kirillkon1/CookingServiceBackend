@@ -1,0 +1,14 @@
+{
+  "properties": [
+    {
+      "name": "spring.security.jwt.secret",
+      "type": "java.lang.String",
+      "description": "Secret key for JWT."
+    },
+    {
+      "name": "spring.security.jwt.expiration",
+      "type": "java.lang.Long",
+      "description": "Json Web Token (JWT) lifetime."
+    }
+  ]
+}

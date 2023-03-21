@@ -5,9 +5,9 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
-import ru.itmo.cookingservice.exceptions.receiptExceptions.NotFoundException
-import ru.itmo.cookingservice.exceptions.userException.UserAlreadyExistsException
-import ru.itmo.cookingservice.exceptions.userException.UserDoesNotExistException
+import ru.itmo.cookingservice.auth.user.exceptions.UnauthorizedException
+import ru.itmo.cookingservice.auth.user.exceptions.UserAlreadyExistsException
+import ru.itmo.cookingservice.auth.user.exceptions.UserDoesNotExistException
 
 @RestControllerAdvice
 class ErrorHandler {
@@ -46,6 +46,23 @@ class ErrorHandler {
         return ResponseEntity(
             ApiError(ex.message),
             HttpStatus.NOT_FOUND,
+        )
+    }
+
+    @ExceptionHandler(UnauthorizedException::class)
+    fun notFoundExceptionHandler(ex: UnauthorizedException): ResponseEntity<ApiError> {
+        return ResponseEntity(
+            ApiError(ex.message),
+            HttpStatus.UNAUTHORIZED,
+        )
+    }
+
+
+    @ExceptionHandler(CustomException::class)
+    fun customExceptionHandler(ex: CustomException): ResponseEntity<ApiError> {
+        return ResponseEntity(
+            ApiError(ex.message),
+            HttpStatus.CONFLICT,
         )
     }
 }

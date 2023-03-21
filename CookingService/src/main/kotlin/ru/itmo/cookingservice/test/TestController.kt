@@ -1,38 +1,58 @@
 package ru.itmo.cookingservice.test
 
+import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.web.bind.annotation.*
-import ru.itmo.cookingservice.dto.receipt.ReceiptDto
-import ru.itmo.cookingservice.models.Receipt
-import ru.itmo.cookingservice.services.ReceiptService
-import javax.validation.Valid
+import ru.itmo.cookingservice.auth.user.User
+import ru.itmo.cookingservice.auth.user.UserService
+import ru.itmo.cookingservice.receipt.receiptDto.ReceiptDto
+import ru.itmo.cookingservice.receipt.Receipt
+import ru.itmo.cookingservice.receipt.filter.ReceiptFilterRepository
+import ru.itmo.cookingservice.security.jwt.JwtTokenUtil
 
 @RestController
 @RequestMapping("/test")
-class TestController(private val receiptService: ReceiptService) {
+class TestController(
+    private val userService: UserService,
+    private val filterRepository: ReceiptFilterRepository
+) {
+
+
+    val jwtTokenUtil = JwtTokenUtil()
 
     @GetMapping("/1")
     fun doTestOne(): String {
-        return "Hello, Test controller!"
+        return jwtTokenUtil.generateToken("Hello, Test controller!")
     }
 
     @GetMapping()
-    fun getByPageAndSize(@RequestBody dto: ReceiptDto): Receipt {
+    fun getByPageAndSize(@RequestBody dto: ReceiptDto): Iterable<User> {
         println(dto)
-        return receiptService.create(dto)
+        return userService.getAll()
     }
 
-    @GetMapping("/page/{page}")
-    fun getByPage(@PathVariable page: Int): String {
-        return "$page"
+    @GetMapping("/2")
+    fun getByPage(): List<Receipt> {
+
+        val names = listOf("лук", "картофель", "сливочное масло")
+
+
+
+        return filterRepository.findByReceiptsByIngredientsIdsIn(names, names.size)
     }
 
-    @PostMapping("1")
+    @GetMapping("3")
     fun doTestDTO(
-        @RequestBody @Valid
-        testDTO: TestDTO,
-    ): TestDTO {
-        println("dasd $testDTO")
 
-        return testDTO
+    ): Any? {
+
+        return SecurityContextHolder.getContext().authentication
     }
+
+
+//    @GetMapping("/2")
+//    fun getsdfkgd(@RequestBody dto: CategoryDto): {
+//        val list = dto.categories.map { it.name }.toList()
+//
+//        return filterRepository.findByAllIngredientsIn(list)
+//    }
 }
