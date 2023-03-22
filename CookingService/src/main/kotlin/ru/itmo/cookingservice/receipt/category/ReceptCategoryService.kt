@@ -10,6 +10,16 @@ class ReceptCategoryService(val receiptCategoryRepository: ReceiptCategoryReposi
         return receiptCategoryRepository.findAll()
     }
 
-    fun getStartsWith(starts: String) {
+    fun getStartsWith(starts: String): List<ReceiptCategory> {
+        return receiptCategoryRepository.findAllByNameContaining(starts)
+    }
+
+    fun getByType(type: String): List<ReceiptCategory> {
+        return try {
+            receiptCategoryRepository.findAllByType(ReceiptCategoryType.valueOf(type.uppercase()))
+        } catch (e: Exception) {
+            receiptCategoryRepository.findAllByType(ReceiptCategoryType.OTHER)
+
+        }
     }
 }

@@ -23,4 +23,7 @@ class IngredientService(private val ingredientRepository: IngredientRepository) 
 
         return ingredientList.take(max).sortedBy { it.name }
     }
+
+
+// TODO: Добавить createIngredient(ingredientDTO)
 }

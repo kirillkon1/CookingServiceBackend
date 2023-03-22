@@ -116,6 +116,7 @@ class ReceiptService(
     }
 
     fun getByFilter() {
+        TODO("Доделать фильтр")
         return
     }
 

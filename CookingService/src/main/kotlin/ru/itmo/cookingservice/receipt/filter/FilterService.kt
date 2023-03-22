@@ -12,7 +12,7 @@ class FilterService {
     fun doFilter(filterDto: FilterDto): List<Receipt>{
         val receiptsList = mutableListOf<Receipt>()
 
-
+        // TODO: Доделать фильтр
 
 
         return receiptsList
