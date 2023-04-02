@@ -1,5 +1,6 @@
 package ru.itmo.cookingservice.receipt.ingredient
 
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 
 @Service
@@ -9,16 +10,20 @@ class IngredientService(private val ingredientRepository: IngredientRepository) 
         return ingredientRepository.findAll()
     }
 
+    fun getById(id: Long): Ingredient?{
+        return ingredientRepository.findByIdOrNull(id)
+    }
+
     fun doIngredientsSearch(name: String?, max: Int = 20, containing: Boolean = false): List<Ingredient> {
         val ingredientList: MutableList<Ingredient> = ingredientRepository.findByStartsWith(name!!)
 
         if (ingredientList.size >= max) {
-            return ingredientList.take(max)
+            return ingredientList.take(max).sortedBy { it.name }
         }
 
         if (containing) {
             val tmpList = ingredientRepository.findByNameContains(name)
-            ingredientList.addAll(tmpList)
+            return tmpList.take(max).sortedBy { it.name }
         }
 
         return ingredientList.take(max).sortedBy { it.name }

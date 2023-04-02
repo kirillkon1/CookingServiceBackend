@@ -1,9 +1,6 @@
 package ru.itmo.cookingservice.receipt.ingredient
 
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestParam
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("api/ingredients")
@@ -14,9 +11,14 @@ class IngredientController(val ingredientService: IngredientService) {
         return ingredientService.getAll()
     }
 
+    @GetMapping("/{id}")
+    fun getById(@PathVariable id: Long): Ingredient? {
+        return ingredientService.getById(id)
+    }
+
     @GetMapping("/search")
-    fun getStartsWith(
-        @RequestParam(required = true, name = "name") name: String? = null,
+    fun search(
+        @RequestParam(required = true, name = "name") name: String? = " ",
         @RequestParam(required = false, name = "max") max: Int? = null,
         @RequestParam(required = false, name = "contains") contain: Boolean? = null,
     ): List<Ingredient> {

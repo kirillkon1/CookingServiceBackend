@@ -16,7 +16,8 @@ SELECT u.id, r.id
 FROM users u,
      user_roles r
 WHERE u.name = '123'
-  AND r.name IN ('USER', 'ADMIN') ON CONFLICT DO NOTHING;
+  AND r.name IN ('USER', 'ADMIN')
+ON CONFLICT DO NOTHING;
 
 
 

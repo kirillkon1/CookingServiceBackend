@@ -6,9 +6,9 @@ import jakarta.validation.constraints.Size
 
 class RegisterDto {
 
-    @NotBlank(message = "login не может быть пустым!")
-    @Size(min = 3, message = "login не может быть короче 3 символов!")
-    val login: String? = null
+    @NotBlank(message = "username не может быть пустым!")
+    @Size(min = 3, message = "username не может быть короче 3 символов!")
+    val username: String? = null
 
     @NotBlank(message = "password не может быть пустым!")
     @Size(min = 3, message = "password не может быть короче 3 символов!")

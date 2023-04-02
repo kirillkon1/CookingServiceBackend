@@ -1,9 +1,11 @@
 package ru.itmo.cookingservice.auth
 
+import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Service
 import ru.itmo.cookingservice.auth.dto.JwtResponse
 import ru.itmo.cookingservice.auth.dto.LoginDto
 import ru.itmo.cookingservice.auth.dto.RegisterDto
+import ru.itmo.cookingservice.auth.user.User
 import ru.itmo.cookingservice.auth.user.UserService
 import ru.itmo.cookingservice.security.jwt.JwtTokenUtil
 import ru.itmo.cookingservice.utils.Hasher
@@ -16,7 +18,7 @@ class AuthService(private val userService: UserService) {
 
     fun register(dto: RegisterDto): JwtResponse {
 
-        val userName = dto.login
+        val userName = dto.username
         val password = Hasher.sha256(dto.password!!)
         val email = dto.email
 
@@ -28,10 +30,12 @@ class AuthService(private val userService: UserService) {
     fun login(dto: LoginDto): JwtResponse {
 
         val encryptPassword = Hasher.sha256(dto.password!!)
-        val user = userService.getByNameAndPassword(dto.login!!, encryptPassword)
+        val user = userService.getByNameAndPassword(dto.username!!, encryptPassword)
 
         return JwtResponse(username = user.name!!, user.id, token = jwtTokenUtil.generateToken(user.name!!))
     }
 
 
 }
+
+
