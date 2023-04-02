@@ -1,0 +1,66 @@
+.box {
+    background-color: #ffffff;
+    width: 50em;
+    height: 34em;
+    padding-top: 20px;
+    padding-left: 30px;
+    padding-right: 30px;
+
+
+    margin-top: 10%;
+    border-radius: 0.5em;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.22);
+}
+
+
+.header_text {
+    font-size: 24px;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.button_form {
+    position: absolute;
+}
+
+.navigate_row {
+    display: flex; /* Use flexbox */
+    justify-content: space-between; /* Distribute components evenly */
+    align-items: center; /* Center components vertically */
+}
+
+
+.form_text {
+    font-size: 13px;
+    text-align: center;
+    margin-right: 5px;
+    color: grey;
+
+    display: block;
+    position: relative;
+    padding: 0.2em 0;
+}
+
+.form_text:hover{
+    color: rgba(0, 18, 89, 0.53);
+    stroke-width: 300px;
+    transition: opacity 400ms;
+}
+
+.form_animation::after{
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 0.1em;
+    background-color: rgba(136, 204, 255, 0.53);
+    opacity: 0;
+    transition: opacity 300ms, transform 300ms;
+}
+
+.form_animation:hover::after,
+.form_animation:focus::after {
+    opacity: 1;
+    transform: translate3d(0, 0.01em, 0);
+}
