@@ -1,4 +1,4 @@
-package ru.itmo.cookingservice.receipt.receiptDto
+package ru.itmo.cookingservice.receipt.receiptDto.requestDto
 
 import jakarta.validation.Valid
 import jakarta.validation.constraints.*
@@ -26,6 +26,4 @@ class ReceiptDto {
     @NotEmpty(message = "Список compositions не может быть пустым!")
     @Valid
     val compositions: MutableList<CompositionDto>? = null
-
-    val createdDate: LocalDateTime = LocalDateTime.now()
 }

@@ -8,12 +8,13 @@ import ru.itmo.cookingservice.auth.user.User
 import ru.itmo.cookingservice.auth.user.UserRepository
 import ru.itmo.cookingservice.exceptions.CustomException
 import ru.itmo.cookingservice.receipt.category.CategoryDto
-import ru.itmo.cookingservice.receipt.receiptDto.ReceiptDto
+import ru.itmo.cookingservice.receipt.receiptDto.requestDto.ReceiptDto
 import ru.itmo.cookingservice.exceptions.NotFoundException
 import ru.itmo.cookingservice.receipt.composition.Composition
 import ru.itmo.cookingservice.receipt.ingredient.IngredientRepository
 import ru.itmo.cookingservice.receipt.metric.MetricRepository
 import ru.itmo.cookingservice.receipt.category.ReceiptCategoryRepository
+import ru.itmo.cookingservice.receipt.receiptDto.responseDto.ReceiptSimpleDto
 import ru.itmo.cookingservice.utils.Logger
 import java.util.Optional
 
@@ -27,8 +28,11 @@ class ReceiptService(
 ) {
 
 
+    fun getReceiptById(id: Long): Receipt{
+        return receiptRepository.findById(id).get()
+    }
+
     fun getReceiptByPageAndSize(size: Int = 10, page: Int = 10): List<Receipt> {
-        print("$size, $page")
         val pageable = PageRequest.of(size, page)
         return receiptRepository.findAll(pageable).content
     }
@@ -37,23 +41,40 @@ class ReceiptService(
         return receiptRepository.findAll()
     }
 
-    fun getByStartsWith(str: String): List<Receipt> {
+    fun getByStartsWith(str: String, total: Int): List<Receipt> {
         val strLowercase = str.lowercase()
-        val receiptList = receiptRepository.getStartsWith(strLowercase)
+        val receiptList = receiptRepository.getStartsWith(strLowercase).take(total)
 
         if (receiptList.isNotEmpty()) {
             return receiptList
         }
 
-        return receiptRepository.getByNameContains(strLowercase)
+        return receiptRepository.getByNameContains(strLowercase).take(total)
     }
 
     fun getByCategoriesIn(dto: CategoryDto): List<Receipt> {
-        println(dto)
         val namesList: List<String?> = dto.categories?.map { it.name }!!.toList()
 
-
         return receiptRepository.getReceiptsByCategoriesNamesIn(namesList)
+    }
+
+    fun getSimpleById(id: Long): ReceiptSimpleDto {
+        return receiptRepository.findById(id).get().convertToSimple()
+    }
+
+    fun getSimpleBySearch(name: String, total: Int): List<ReceiptSimpleDto> {
+
+        val simpleList = getByStartsWith(name, total).map {
+            ReceiptSimpleDto(
+                id = it.id,
+                name = it.name!!,
+                rating = it.rating,
+                imageUrl = it.imageUrl,
+                categories = it.categories!!
+            )
+        }.toList()
+
+        return simpleList
     }
 
     @Transactional
@@ -186,4 +207,5 @@ class ReceiptService(
     fun deleteAll() {
         return receiptRepository.deleteAll()
     }
+
 }

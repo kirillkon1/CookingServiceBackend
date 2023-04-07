@@ -14,13 +14,13 @@ interface ReceiptRepository : JpaRepository<Receipt, Long> {
     override fun findAll(pageable: Pageable): Page<Receipt>
 
     @Query(
-        value = "select * from receipt where (select starts_with(name, ?1));",
+        value = "select * from receipt where (receipt.name ilike concat(:str, '%') );",
         nativeQuery = true,
     )
     fun getStartsWith(@Param("str") str: String): List<Receipt>
 
     @Query(
-        value = "select * from receipt where (receipt.name ilike concat('%', :str, '%') )",
+        value = "select * from receipt where (receipt.name ilike concat('%', :str, '%') );",
         nativeQuery = true,
     )
     fun getByNameContains(@Param("str") str: String): List<Receipt>

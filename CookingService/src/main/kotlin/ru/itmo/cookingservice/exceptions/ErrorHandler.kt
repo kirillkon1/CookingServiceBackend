@@ -49,6 +49,22 @@ class ErrorHandler {
         )
     }
 
+    @ExceptionHandler(NoSuchElementException::class)
+    fun noSuchElementExceptionHandler(ex: NoSuchElementException): ResponseEntity<ApiError> {
+        return ResponseEntity(
+            ApiError(ex.message),
+            HttpStatus.NOT_FOUND,
+        )
+    }
+
+//    @ExceptionHandler(NoSuchElementException::class)
+//    fun customExceptionHandler(ex: NoSuchElementException): ResponseEntity<ApiError> {
+//        return ResponseEntity(
+//            ApiError(ex.message),
+//            HttpStatus.NOT_FOUND,
+//        )
+//    }
+
     @ExceptionHandler(UnauthorizedException::class)
     fun notFoundExceptionHandler(ex: UnauthorizedException): ResponseEntity<ApiError> {
         return ResponseEntity(

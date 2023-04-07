@@ -15,6 +15,11 @@ open class Logger {
         }
 
         @JvmStatic
+        fun warn(message: String?) {
+            logger.warn(message)
+        }
+
+        @JvmStatic
         fun error(message: String, throwable: Throwable?) {
             logger.error(message, throwable)
         }

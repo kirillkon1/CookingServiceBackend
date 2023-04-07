@@ -1,4 +1,4 @@
-package ru.itmo.cookingservice.receipt.receiptDto
+package ru.itmo.cookingservice.receipt.receiptDto.requestDto
 
 import jakarta.validation.Valid
 import jakarta.validation.constraints.Max

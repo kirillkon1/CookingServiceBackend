@@ -7,6 +7,7 @@ import org.hibernate.annotations.UpdateTimestamp
 import ru.itmo.cookingservice.auth.user.User
 import ru.itmo.cookingservice.receipt.composition.Composition
 import ru.itmo.cookingservice.receipt.category.ReceiptCategory
+import ru.itmo.cookingservice.receipt.receiptDto.responseDto.ReceiptSimpleDto
 import java.time.Instant
 import java.util.*
 
@@ -20,17 +21,17 @@ class Receipt(
     var description: String? = null,
 
     @Column(name = "amount_of_portions")
+    @JsonProperty(value = "amount_of_portions")
     var amountOfPortions: Int = 1,
 
     @Column
     var calories: Int = 0,
 
-    @Lob
-    @Column(name="picture")
-    var picture: ByteArray? = null,
+    @Column(name="image_url")
+    @JsonProperty(value = "image_url")
+    var imageUrl: String? = null,
 
     @JoinColumn(name = "user_id")
-    @JsonProperty("owner")
     @ManyToOne(cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
     var user: User? = null,
 
@@ -63,4 +64,15 @@ class Receipt(
     @Column(name = "last_modify_date")
     @field:UpdateTimestamp
     var lastModifyDate: Instant? = null
+
+    fun convertToSimple(): ReceiptSimpleDto {
+        return ReceiptSimpleDto(
+            id = id,
+            name = name!!,
+            rating = rating,
+            categories = categories!!,
+            imageUrl = imageUrl
+        )
+    }
+
 }
