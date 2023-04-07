@@ -1,0 +1,49 @@
+.page{
+    padding-right: 300px;
+    padding-left: 300px;
+}
+
+.container{
+    background: #adff2f;
+
+    padding-top: 50px;
+    padding-bottom: 15px;
+
+    height: auto;
+    width: auto;
+
+}
+
+.receipt_header{
+    margin-left: 40px;
+    margin-right: 40px;
+    /*margin-top: 40px;*/
+
+    display: flex;
+
+}
+
+.receipt_header_info{
+    margin-left: 50px;
+    margin-top: 20px;
+
+    width: 1300px;
+
+}
+
+.category_box{
+
+    width: fit-content;
+    height: fit-content;
+
+    background: #f2f2f3;
+    padding: 2px;
+
+}
+
+.image{
+
+
+    box-shadow: 1px 5px 10px rgba(0, 0, 0, 0.25);
+
+}

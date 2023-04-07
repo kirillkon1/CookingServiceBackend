@@ -1,0 +1,71 @@
+.card {
+    box-shadow: 1px 5px 10px rgba(0, 0, 0, 0.25);
+    background-color: rgb(255, 255, 255);
+    width:740px;
+    /*height:200px;*/
+    border-radius: 10px;
+
+    padding: 10px;
+}
+.step_number_icon {
+    background-color: rgb(241, 241, 241);
+    width:35px;
+    height:35px;
+
+    /*padding-top: 6px;*/
+    /*padding-left: 13px;*/
+
+    border-radius: 50px;
+    border:1px solid rgba(189, 189, 189, 1);
+
+    flex-shrink: 0;
+
+    display: flex;
+    flex-wrap: wrap;
+    align-content: center;
+    justify-content: center;
+
+}
+
+
+.step_number {
+    color:rgba(0, 0, 0, 1);
+    font-family: Inter, serif;
+    flex-shrink: 0;
+
+    /*position: relative;*/
+}
+.card_text {
+    color:rgba(0, 0, 0, 1);
+    /*width:528px;*/
+    /*height:152px;*/
+    margin-left: 50px;
+
+    font-family: Inter, serif;
+    text-align:left;
+    font-size:16px;
+    letter-spacing:1px;
+}
+
+.cooking_table{
+
+    padding-left: 10px;
+    padding-right: 10px;
+
+
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.flex {
+    display: flex;
+}
+
+.title_text{
+    margin-top: 6px;
+    margin-left: 25px;
+    font-weight: bold;
+    color: #4f4f4f;
+    font-size: 16px;
+}

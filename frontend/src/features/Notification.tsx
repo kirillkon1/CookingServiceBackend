@@ -3,18 +3,29 @@ import {IconX} from "@tabler/icons-react";
 import * as React from "react";
 import {ExclamationMark} from "tabler-icons-react";
 
-export function showNotificatorError(status: number, error: IError) {
-    notifications.show({
-        icon: <IconX />,
-        autoClose: 2500,
-        title: "Ошибка! Код " + status,
-        message: error.message + " " + error.time,
-    })
+export function showNotificatorError(error: IError) {
+    try {
+        notifications.show({
+            icon: <IconX/>,
+            autoClose: 2500,
+            title: "Ошибка!",
+            message: error.message + " " + error.time,
+        })
+    } catch (e) {
+        console.log(e.message)
+        notifications.show({
+            icon: <IconX/>,
+            autoClose: 2500,
+            title: "Ошибка!",
+            message: "Ой что-то пошло не так!",
+        })
+    }
+
 }
 
 export function showNotificatorInfo(message: string) {
     notifications.show({
-        icon: <ExclamationMark />,
+        icon: <ExclamationMark/>,
         autoClose: 2500,
         message: message
     })

@@ -13,30 +13,30 @@ import {
 } from "@mantine/core";
 import {ArrowNarrowLeft} from "tabler-icons-react";
 import Link from "next/link";
-import {showNotificatorError} from "@/features/Notification";
+import {showNotificatorError, showNotificatorInfo} from "@/features/Notification";
+import {register} from "@/api";
+import {ApiStorage} from "@/domains/apiStorage";
+import {AxiosError} from "axios";
 
 
 interface UserForm {
-    username: string;
-    password: string;
-    email: string;
-
-    form_checkbox: boolean
+    username: string,
+    password: string,
+    email: string
 }
 
 const RegistrationForm = () => {
-    const [user, setUser] = useState<UserForm>({
-        username: '123',
-        password: '123',
-        email: '123@mail.ru',
-        form_checkbox: false
+    const [userForm, setUserForm] = useState<UserForm>({
+        username: '',
+        password: '',
+        email: '',
     });
-    const [answer, setAnswer] = useState<IAuth>(null);
+
     const [buttonStatus, setButtonStatus] = useState(false)
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setUser({
-            ...user,
+        setUserForm({
+            ...userForm,
             [event.target.name]: event.target.value,
         });
     };
@@ -46,29 +46,20 @@ const RegistrationForm = () => {
 
         setButtonStatus(true)
 
-        const response = await fetch('http://localhost:8080/auth/register', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(user),
-        });
+        try{
+            const data = await register(userForm)
 
-        setButtonStatus(false)
+            if (data.token) {
+                showNotificatorInfo(data.username + " успешно был создан!")
+                ApiStorage.setUser(data)
 
-        if (!response.ok) {
-            showNotificatorError(response.status, await response.json()<IError>);
-            setAnswer(null)
-            return;
-        }
+                // await router.push("/")
+            }
 
-        const data = await response.json();
-        console.log(data)
-
-        if (data.token) {
-            setAnswer(data);
-        } else {
-            showNotificatorError(response.status, await response.json()<IError>);
+        }catch (e: AxiosError<IError>){
+            showNotificatorError(e.response?.data)
+        }finally {
+            setButtonStatus(false)
         }
     };
 
@@ -90,15 +81,15 @@ const RegistrationForm = () => {
                 <Divider my="xs" label="Форма регистрации" labelPosition="center" color="#000000"/>
 
                 <form onSubmit={handleSubmit}>
-                    <TextInput value={user.username} name="username" label="Имя пользователя" lh={2} mt='10px'
+                    <TextInput value={userForm.username} name="username" label="Имя пользователя" lh={2} mt='10px'
                                placeholder="Введите имя пользователя"
                                onChange={handleChange}/>
-                    <PasswordInput value={user.password} name="password" label="Пароль" lh={2} mt='10px'
+                    <PasswordInput value={userForm.password} name="password" label="Пароль" lh={2} mt='10px'
                                    placeholder="Введите пароль" error=""
                                    onChange={handleChange}/>
 
 
-                    <TextInput value={user.email} name="email" label="Электронная почта" lh={2} mt='10px' type="email"
+                    <TextInput value={userForm.email} name="email" label="Электронная почта" lh={2} mt='10px' type="email"
                                placeholder="Введите электронную почту"
                                onChange={handleChange}
 
@@ -107,7 +98,7 @@ const RegistrationForm = () => {
                     <Checkbox
                         mt="25px"
                         name="form_checkbox"
-                        label="Я согласен отдать все свои деньги и дом"
+                        label="Я согласен предоставить своё имя и пароль для великой цели!"
                         onChange={handleChange}
                         withAsw
                     />

@@ -14,56 +14,41 @@ import Link from "next/link";
 import styles from "./authForm.module.css"
 import {showNotificatorError, showNotificatorInfo} from "@/features/Notification";
 import {AxiosError} from "axios";
-import {httpClientApi} from "@/api";
-
-
-interface UserForm {
-    username: string;
-    password: string;
-}
+import {login, LoginRequest} from "@/api";
+import {ApiStorage} from "@/domains/apiStorage";
 
 const LoginForm = () => {
 
-
-    const [user, setUser] = useState<UserForm>({
+    const [userForm, setUserForm] = useState<LoginRequest>({
         username: '',
-        password: '123'
+        password: ''
     });
 
     const [buttonStatus, setButtonStatus] = useState(false)
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setUser({
-            ...user,
+        setUserForm({
+            ...userForm,
             [event.target.name]: event.target.value,
         });
     };
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        let response
+
+        setButtonStatus(true)
+
         try {
-            response = await httpClientApi.post(
-                "/auth/login",
-                user
-            )
-
-
-            const data = response.data
-
+            const data = await login(userForm)
             if (data.token) {
-                // setAnswer(data);
+                showNotificatorInfo("Пользователь " + data.username + " успешно вошёл!")
+                ApiStorage.setUser(data)
 
-
-
-                showNotificatorInfo(data.username + " успешно вошел!")
-
-                // await router.push("/home")
+                // await router.push("/")
             }
 
         } catch (e: AxiosError<IError>) {
-            console.log(e)
-            showNotificatorError(e.response.status, e.response?.data)
+            showNotificatorError(e.response?.data)
         } finally {
             setButtonStatus(false)
         }
@@ -71,7 +56,6 @@ const LoginForm = () => {
 
     return (
         <div>
-
 
             <Container maw={400} h={"auto"} mx="auto" px="xs" className={styles.box}>
 
@@ -95,10 +79,10 @@ const LoginForm = () => {
                 <Divider my="xs" label="Форма авторизации" labelPosition="center" color="#000000"/>
 
                 <form onSubmit={handleSubmit}>
-                    <TextInput value={user.username} name="username" label="Имя пользователя" lh={2} mt='10px'
+                    <TextInput value={userForm.username} name="username" label="Имя пользователя" lh={2} mt='10px'
                                placeholder=" Имя пользователя или email"
                                onChange={handleChange}/>
-                    <PasswordInput value={user.password} name="password" label="Пароль" lh={2} mt='10px'
+                    <PasswordInput value={userForm.password} name="password" label="Пароль" lh={2} mt='10px'
                                    placeholder="Введите пароль" error=""
                                    onChange={handleChange}/>
                     <Link href="/#">
@@ -112,8 +96,6 @@ const LoginForm = () => {
                             pos='absolute'
                             loading={buttonStatus}
                             loaderPosition="center"
-
-
                             variant="gradient"
                             gradient={{from: "teal", to: "blue", deg: 110}}
                         >Войти</Button>

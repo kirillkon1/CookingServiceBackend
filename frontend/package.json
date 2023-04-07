@@ -27,7 +27,11 @@
     "next": "13.2.4",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "react-select": "^5.7.2",
     "tabler-icons-react": "^1.56.0",
-    "typescript": "5.0.2"
+    "ts-time": "^0.2.1",
+    "ts-time-format": "^0.2.1",
+    "typescript": "5.0.2",
+    "use-debounce": "^9.0.4"
   }
 }
